@@ -1,34 +1,29 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {StackNavigator} from 'react-navigation';
+import {StyleSheet} from 'react-native'
+import MainScreen from "./screen/MainScreen";
+import ReadScreen from "./screen/ReadScreen";
+import {Provider} from 'react-redux'
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        flex: 1
+    }
+});
+
+const App = StackNavigator({
+    Main: {
+        screen: MainScreen,
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
+    Read: {
+        screen: ReadScreen,
     },
 });
 
-export default class App extends Component {
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    Welcome to React Native!
-                </Text>
-            </View>
-        );
-    }
+export default () => {
+    return (
+        <Provider>
+            <App style={styles.container}/>
+        </Provider>
+    )
 }
