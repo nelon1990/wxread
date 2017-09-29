@@ -3,7 +3,6 @@ import {StackNavigator} from 'react-navigation';
 import {StyleSheet} from 'react-native'
 import MainScreen from "./screen/MainScreen";
 import ReadScreen from "./screen/ReadScreen";
-import {Provider} from 'react-redux'
 
 const styles = StyleSheet.create({
     container: {
@@ -14,16 +13,20 @@ const styles = StyleSheet.create({
 const App = StackNavigator({
     Main: {
         screen: MainScreen,
+        navigationOptions: {
+            header: null
+        }
     },
     Read: {
         screen: ReadScreen,
+        navigationOptions: {
+            // gesturesEnabled:true
+        }
     },
 });
 
 export default () => {
     return (
-        <Provider>
-            <App style={styles.container}/>
-        </Provider>
+        <App style={styles.container}/>
     )
 }

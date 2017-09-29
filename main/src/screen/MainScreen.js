@@ -1,12 +1,20 @@
 import React, {Component} from 'react';
 import {TabNavigator} from 'react-navigation';
+import {Button, View} from 'react-native'
 import NewsScreen from "./NewsScreen";
 import WxArticleScreen from "./WxArticleScreen";
 
 
 const Tab = TabNavigator(
     {
-        News: {screen: NewsScreen},
+        News: {
+            screen: NewsScreen,
+            navigationOptions: ({navigation, screenProps}) => {
+                return {
+                    tabBarLabel: 'News'
+                }
+            }
+        },
         WxArticle: {screen: WxArticleScreen}
     },
     {
@@ -17,20 +25,26 @@ const Tab = TabNavigator(
         tabBarOptions: {
             indicatorStyle: {
                 height: 0
-            }
+            },
         }
     }
 );
 
 
 class MainScreen extends Component {
-    static navigationOptions = {
-        header: null
+    static navigationOptions = ({navigation}) => {
+        console.log(navigation);
+        return {
+            header: null
+        }
     };
 
     render() {
+        console.log(this.props.navigation);
         return (
-            <Tab/>
+            <View style={{flex: 1}}>
+                <Tab screenProps={{rootNavigation: this.props.navigation}}/>
+            </View>
         );
     }
 }

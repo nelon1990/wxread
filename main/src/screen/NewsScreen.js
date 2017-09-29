@@ -1,5 +1,21 @@
 import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import Svg, {
+    Circle,
+    Ellipse,
+    G,
+    LinearGradient,
+    RadialGradient,
+    Line,
+    Path,
+    Polygon,
+    Polyline,
+    Rect,
+    Symbol,
+    Use,
+    Defs,
+    Stop
+} from 'react-native-svg';
 
 const styles = StyleSheet.create({
     container: {
@@ -8,30 +24,29 @@ const styles = StyleSheet.create({
 });
 
 class NewsScreen extends Component {
-    static navigationOptions = {
-        title: 'News',
-        header: null,
-        tabBarIcon: () => {
-            return (
-                <Text>aaa</Text>
-            );
-        }
-    };
 
     constructor(props) {
         super(props);
-        console.log(props)
     }
 
     _onBtnClick() {
-        this.props.navigation.navigate('WxArticle',{});
+        this.props.screenProps.rootNavigation.navigate('Read');
     }
 
+
     render() {
+        const json = require('../../res/form.json');
+
         return (
             <View style={styles.container}>
                 <Text>NewsScreen</Text>
-                <Button onPress={this._onBtnClick.bind(this)} title="click"/>
+                <Svg height={200} width={200} >
+                    <Path d={json['path1']} />
+                    {/*<Path d={json['path2']} />*/}
+                    {/*<Path d={json['path3']} />*/}
+                    {/*<Path d={json['path4']} />*/}
+                    {/*<Path d={json['path5']} />*/}
+                </Svg>
             </View>
         )
     }
