@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {TabNavigator} from 'react-navigation';
-import {Text} from 'react-native';
+import {Text,View} from 'react-native';
+import NewsScreen from "../screen/NewsScreen";
+
 
 export default class WxReadTabList extends Component {
 
@@ -10,13 +12,13 @@ export default class WxReadTabList extends Component {
 
     static defaultProps = {
         tabs: [{
-            channel: '1',
+            channel: '111',
             channelid: '1',
         }, {
-            channel: '2',
+            channel: '2222',
             channelid: '2',
         }, {
-            channel: '3',
+            channel: '322',
             channelid: '3',
         }]
     };
@@ -34,11 +36,7 @@ export default class WxReadTabList extends Component {
         const routeConfig = {};
         this.state.tabs.forEach(({channel, channelid}) => {
             routeConfig[channel] = {
-                screen: () => {
-                    return (
-                        <Text>aaaaa</Text>
-                    )
-                },
+                screen: NewsScreen,
 
                 navigationOptions: ({navigation, screenProps}) => ({
                     tabBarLabel: {channel},
@@ -49,7 +47,9 @@ export default class WxReadTabList extends Component {
         const Tab = TabNavigator(routeConfig, {});
 
         return (
-            <Tab/>
+            <View>
+                <Tab/>
+            </View>
         );
     }
 }

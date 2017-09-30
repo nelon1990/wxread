@@ -17,33 +17,37 @@ let style = StyleSheet.create({
     },
 });
 
-const Tab = TabNavigator(
-    {
-        News: {
-            screen: NewsScreen,
-            navigationOptions: ({navigation, screenProps}) => ({
-                tabBarLabel: 'News',
-                tabBarIcon: () => (
-                    <Image
-                        source={require('../../res/img_main_tab_news.png')}
-                        style={style.icon}
-                    />
-                )
-            })
-        },
-        WxArticle: {
-            screen: WxArticleScreen,
-            navigationOptions: ({navigation, screenProps}) => ({
-                tabBarLabel: 'News',
-                tabBarIcon: () => (
-                    <Image
-                        source={require('../../res/img_main_tab_wxread.png')}
-                        style={style.icon}
-                    />
-                )
-            })
-        }
+const routeConfig = {
+    News: {
+        screen: NewsScreen,
+        navigationOptions: ({navigation, screenProps}) => ({
+            tabBarLabel: 'News',
+            tabBarIcon: () => (
+                <Image
+                    source={require('../../res/img_main_tab_news.png')}
+                    style={style.icon}
+                />
+            )
+        })
     },
+    WxArticle: {
+        screen: WxArticleScreen,
+        navigationOptions: ({navigation, screenProps}) => ({
+            tabBarLabel: 'News',
+            tabBarIcon: () => (
+                <Image
+                    source={require('../../res/img_main_tab_wxread.png')}
+                    style={style.icon}
+                />
+            )
+        })
+    }
+};
+
+console.log(routeConfig);
+
+const Tab = TabNavigator(
+    routeConfig,
     {
         tabBarPosition: 'bottom',
         lazy: true,
