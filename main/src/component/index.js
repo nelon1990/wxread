@@ -1,6 +1,8 @@
 import WxReadHeader from './WxReadHeader'
-import WxReadTabList from './WxReadTabList'
+import WxReadTabList from './WxReadContent'
+import WxReadArticleItem from './WxReadArticleItem'
+import WxReadArticleList from './WxReadArticleList'
 
 export {
-    WxReadHeader,WxReadTabList,
+    WxReadHeader, WxReadTabList,WxReadArticleItem, WxReadArticleList
 }

@@ -4,6 +4,8 @@ import {StyleSheet} from 'react-native'
 import MainScreen from "./screen/MainScreen";
 import ReadScreen from "./screen/ReadScreen";
 
+import {WxReadArticleItem} from './component/index'
+
 const styles = StyleSheet.create({
     container: {
         flex: 1
@@ -30,3 +32,10 @@ export default () => {
         <App style={styles.container}/>
     )
 }
+
+
+// export default () => {
+//     return (
+//         <WxReadArticleItem style={{margin: 12,}}/>
+//     )
+// }

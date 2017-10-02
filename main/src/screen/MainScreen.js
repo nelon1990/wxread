@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
 import {TabNavigator} from 'react-navigation';
-import {Image, View, StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import NewsScreen from "./NewsScreen";
 import WxArticleScreen from "./WxArticleScreen";
 
 let style = StyleSheet.create({
     tabBar: {
+        padding: 0,
         backgroundColor: 'white',
-        height: 48,
+        height: 54,
     },
 
     icon: {
-        flex: 1,
-        width: 24,
-        tintColor: 'blue'
+        alignContent: 'center',
+        margin: 0,
+        padding: 0,
     },
 });
 
@@ -21,24 +23,26 @@ const routeConfig = {
     News: {
         screen: NewsScreen,
         navigationOptions: ({navigation, screenProps}) => ({
-            tabBarLabel: 'News',
+            tabBarLabel: '新闻',
             tabBarIcon: () => (
-                <Image
-                    source={require('../../res/img_main_tab_news.png')}
+                <Icon
                     style={style.icon}
-                />
+                    name={"dns"}  // 图标
+                    size={24}
+                    color={'darkblue'}/>
             )
         })
     },
     WxArticle: {
         screen: WxArticleScreen,
         navigationOptions: ({navigation, screenProps}) => ({
-            tabBarLabel: 'News',
+            tabBarLabel: '微信文章',
             tabBarIcon: () => (
-                <Image
-                    source={require('../../res/img_main_tab_wxread.png')}
+                <Icon
                     style={style.icon}
-                />
+                    name={"description"}  // 图标
+                    size={24}
+                    color={'darkblue'}/>
             )
         })
     }
@@ -50,18 +54,34 @@ const Tab = TabNavigator(
     routeConfig,
     {
         tabBarPosition: 'bottom',
+        animationEnabled: false,
         lazy: true,
         tabBarOptions: {
+            tabStyle: {
+                padding: 0,
+                margin: 0,
+            },
             indicatorStyle: {
                 height: 0
+            },
+            labelStyle: {
+                fontSize: 12,
+                color: 'darkblue',
+                marginTop: 0,
+                fontWeight:'bold'
+            },
+            iconStyle: {
+                margin: 0
             },
             activeBackgroundColor: 'lightblue',
             inactiveBackgroundColor: 'white',
             style: style.tabBar,
             showIcon: true,
-            showLabel: false,
+            showLabel: true,
+            pressColor: 'lightblue',
         },
-        initialRouteName:'WxArticle'
+        swipeEnabled:false,
+        initialRouteName: 'WxArticle'
     }
 );
 

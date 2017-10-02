@@ -10,7 +10,6 @@ let style = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 12,
-        elevation: 2
     },
     searchContentContainer: {
         flex: 1,

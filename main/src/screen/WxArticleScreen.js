@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {StyleSheet, ToastAndroid, Button, Text, View} from 'react-native';
+import {StyleSheet, ToastAndroid, View} from 'react-native';
 import {WxReadHeader, WxReadTabList} from '../component/index'
-import {WxReadApi} from '../api/index'
+import {WxReadApi, WxReadApi2} from '../api/index'
 
 const styles = StyleSheet.create({
     container: {
@@ -10,20 +10,33 @@ const styles = StyleSheet.create({
 });
 
 export default class WxArticleScreen extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            result: ''
+            tabs: [],
+            hasGotTabs: false,
         }
     }
 
-    _onBtnClick() {
-        WxReadApi.getWxReadSearch('麦蒂')
+    componentDidMount() {
+        WxReadApi2.getTypeList()
             .subscribe(
                 result => {
-                    console.log(result);
+                    console.log('getTypeList >>>>>>>>>>>>>>>>>>', result);
+                    const tabs = [];
+
+                    result.showapi_res_body.typeList.forEach(({id, name}) => {
+                        tabs.push({
+                            channel: name,
+                            channelid: id,
+                        })
+                    });
+
+                    console.log('getTypeList >>>>>>>>>>>>>>>>>>', tabs);
                     this.setState({
-                        result: JSON.stringify(result)
+                        tabs: tabs,
+                        hasGotTabs: true
                     });
                 },
                 err => {
@@ -32,17 +45,28 @@ export default class WxArticleScreen extends Component {
                 () => {
                     console.log("complete")
                 }
-            )
+            );
     }
 
+
     render() {
+        console.log('render WxArticleScreen');
+
         return (
             <View style={[styles.container]}>
                 <WxReadHeader/>
-                <Button onPress={this._onBtnClick.bind(this)} title="click"/>
-                <Text>{this.state.result}</Text>
-                <WxReadTabList/>
+                {this._renderContent()}
             </View>
-        )
+        );
+    }
+
+    _renderContent() {
+        if (this.state.hasGotTabs) {
+            return (
+                <WxReadTabList tabs={this.state.tabs}/>
+            );
+        } else {
+            <View/>
+        }
     }
 };
