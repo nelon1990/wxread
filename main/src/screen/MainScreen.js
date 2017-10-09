@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import NewsScreen from "./NewsScreen";
 import WxArticleScreen from "./WxArticleScreen";
+import WxReadHeader from "../component/WxReadHeader";
 
 let style = StyleSheet.create({
     tabBar: {
@@ -20,23 +21,10 @@ let style = StyleSheet.create({
 });
 
 const routeConfig = {
-    News: {
-        screen: NewsScreen,
-        navigationOptions: ({navigation, screenProps}) => ({
-            tabBarLabel: '新闻',
-            tabBarIcon: () => (
-                <Icon
-                    style={style.icon}
-                    name={"dns"}  // 图标
-                    size={24}
-                    color={'darkblue'}/>
-            )
-        })
-    },
     WxArticle: {
         screen: WxArticleScreen,
         navigationOptions: ({navigation, screenProps}) => ({
-            tabBarLabel: '微信文章',
+            tabBarLabel: '文章',
             tabBarIcon: () => (
                 <Icon
                     style={style.icon}
@@ -45,7 +33,20 @@ const routeConfig = {
                     color={'darkblue'}/>
             )
         })
-    }
+    },
+    News: {
+        screen: NewsScreen,
+        navigationOptions: ({navigation, screenProps}) => ({
+            tabBarLabel: '公众号',
+            tabBarIcon: () => (
+                <Icon
+                    style={style.icon}
+                    name={"face"}  // 图标
+                    size={24}
+                    color={'darkblue'}/>
+            )
+        })
+    },
 };
 
 console.log(routeConfig);
@@ -81,7 +82,6 @@ const Tab = TabNavigator(
             pressColor: 'lightblue',
         },
         swipeEnabled:false,
-        initialRouteName: 'WxArticle'
     }
 );
 
@@ -96,6 +96,7 @@ class MainScreen extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
+                <WxReadHeader/>
                 <Tab screenProps={{rootNavigation: this.props.navigation}}/>
             </View>
         );

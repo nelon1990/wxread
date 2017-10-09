@@ -18,7 +18,6 @@ const style = StyleSheet.create({
     container: {
         width: screenWidth,
         backgroundColor: 'white',
-        marginBottom: 12,
     },
     container_info: {
         width: screenWidth,
@@ -95,13 +94,13 @@ export default class WxReadArticleItem extends Component {
     };
 
     static defaultProps = {
-        pic: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3627189773,1085201707&fm=173&s=4F209347EC72468EDDB1203103008092&w=400&h=300&img.JPEG',
-        avatar: 'http://www.shishanghezi.com/data/attachment/forum/201310/05/230529hen06yvddrrt68o0.jpg',
-        name: '情商智慧语录情商智慧语录情商智慧语录情商智慧语录情商智慧语录情商智慧语录',
-        title: '13个哲理笑话，有趣又有料！',
-        date: '08月06日',
-        read: 10,
-        like: 4,
+        pic: '',
+        avatar: '',
+        name: '',
+        title: '',
+        date: '',
+        read: 0,
+        like: 0,
     };
 
     constructor(props) {
@@ -123,6 +122,10 @@ export default class WxReadArticleItem extends Component {
         };
 
 
+    }
+
+    setNativeProps(nativeProps) {
+        this._root.setNativeProps(nativeProps);
     }
 
 
@@ -153,7 +156,9 @@ export default class WxReadArticleItem extends Component {
         if (this.state.hasGotPicSize) {
             const data = this.state.data;
             return (
-                <View style={style.container}>
+                <View ref={component => this._root = component}
+                      {...this.props}
+                      style={style.container}>
                     <Image style={[style.pic, {
                         height: this.state.picHeight,
                         width: this.state.picWidth
@@ -207,7 +212,7 @@ export default class WxReadArticleItem extends Component {
                 </View>
             );
         } else {
-            return (<View/>);
+            return (<View ref={component => this._root = component}/>);
         }
     }
 }

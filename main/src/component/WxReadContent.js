@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ToastAndroid} from 'react-native'
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view'
 import {WxReadArticleList} from '../component/index'
 import {COLOR_THEME_BASE} from '../theme';
@@ -23,7 +23,7 @@ const style = StyleSheet.create({
 });
 
 
-export default class WxReadTabList extends Component {
+export default class WxReadContent extends Component {
 
     static propTypes = {
         tabs: React.PropTypes.array,
@@ -44,15 +44,20 @@ export default class WxReadTabList extends Component {
     }
 
     _renderPage({channel, channelid}, index) {
+        console.log('WxReadContent', this.props);
         return (
             <View style={{flex: 1}}
                   key={channelid}
                   tabTitle={channel}
                   tabLabel={channel}>
                 <WxReadArticleList key={channelid}
-                                   typeId={channelid}/>
+                                   typeId={channelid}
+                                   onItemClick={({url}) => {
+                                       this.props.screenProps.rootNavigation.navigate('Read', {uri: url})
+                                   }}
+                                   {...this.props}/>
             </View>
-        )
+        );
     }
 
     render() {

@@ -33,6 +33,10 @@ export default class WxArticleScreen extends Component {
                         })
                     });
 
+                    tabs.sort((a, b) => {
+                        return Number(a.channelid) - Number(b.channelid);
+                    });
+
                     console.log('getTypeList >>>>>>>>>>>>>>>>>>', tabs);
                     this.setState({
                         tabs: tabs,
@@ -54,7 +58,6 @@ export default class WxArticleScreen extends Component {
 
         return (
             <View style={[styles.container]}>
-                <WxReadHeader/>
                 {this._renderContent()}
             </View>
         );
@@ -63,7 +66,8 @@ export default class WxArticleScreen extends Component {
     _renderContent() {
         if (this.state.hasGotTabs) {
             return (
-                <WxReadTabList tabs={this.state.tabs}/>
+                <WxReadTabList tabs={this.state.tabs}
+                               {...this.props}/>
             );
         } else {
             <View/>
