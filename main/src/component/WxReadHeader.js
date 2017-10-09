@@ -45,6 +45,7 @@ export default class WxReadHeader extends Component {
     render() {
         return (
             <View style={style.container}>
+                {/*<Text>文章</Text>*/}
                 <View style={style.searchContentContainer}>
                     <Image style={style.iconLeft}
                            source={require('../../res/ic_search_black_48dp.png')}/>

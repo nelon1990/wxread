@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         flex: 1
     }
 });
-StatusBar.setHidden(true);
+StatusBar.setHidden(false);
 
 const App = StackNavigator({
         Main: {
