@@ -7,7 +7,8 @@ import {
     View,
     RefreshControl,
     ScrollView,
-    Dimensions
+    Dimensions,
+    ActivityIndicator
 } from 'react-native'
 import {WxReadArticleItem} from './index'
 import {WxReadApi2} from '../api/index'
@@ -15,17 +16,16 @@ import {COLOR_THEME_BASE} from '../theme'
 import {ToastAndroid} from "react-native";
 
 
-let allPages;
-let currentPage;
-let screenW = Dimensions.get('window').width;
+// let allPages;
+// let currentPage;
+// let screenW = Dimensions.get('window').width;
+// let hasGotData;
 
-function init() {
-    allPages = 1;
-    currentPage = 1;
-}
-
-init();
-
+// function init() {
+//     allPages = 1;
+//     currentPage = 1;
+//     hasGotData = false;
+// }
 
 const styles = StyleSheet.create({
     container: {
@@ -33,7 +33,11 @@ const styles = StyleSheet.create({
     },
     separators: {
         height: 24,
-        width: screenW,
+        width: Dimensions.get('window').width,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        opacity: 0.5,
     }
 });
 
@@ -58,64 +62,86 @@ export default class WxReadArticleList extends Component {
             data: props.data,
             refreshing: true,
         };
+
+
+        this.subscriptions = [];
     }
+
+
+    init() {
+        this.allPages = 1;
+        this.currentPage = 1;
+        this.hasGotData = false;
+    }
+
 
     _loadData(reload, onLoadCompleted) {
         if (reload) {
-            init()
+            this.init()
         }
-        if (currentPage <= allPages) {
-            WxReadApi2.getArticles('', currentPage++, this.props.typeId)
-                .subscribe(
-                    result => {
-                        // console.log('getArticles:result >>>>>>>>>>>>>>>>>>', result);
+        if (this.currentPage <= this.allPages) {
+            this.subscriptions.push(
+                WxReadApi2.getArticles('', this.currentPage++, this.props.typeId)
+                    .subscribe(
+                        result => {
+                            // console.log('getArticles:result >>>>>>>>>>>>>>>>>>', result);
+                            const allNum = result.showapi_res_body.pagebean.allNum;
+                            this.allPages = result.showapi_res_body.pagebean.allPages;
 
-                        const allNum = result.showapi_res_body.pagebean.allNum;
-                        allPages = result.showapi_res_body.pagebean.allPages;
+                            const contentlist = result.showapi_res_body.pagebean.contentlist;
 
-                        const contentlist = result.showapi_res_body.pagebean.contentlist;
-
-                        const data = [];
-                        contentlist.forEach((item) => {
-                            data.push({
-                                pic: item.contentImg,
-                                avatar: item.userLogo,
-                                name: item.userName,
-                                title: item.title,
-                                date: item.date,
-                                read: item.read_num,
-                                like: item.like_num,
-                                url: item.url,
-                            })
-                        });
-                        // console.log('getArticles:data >>>>>>>>>>>>>>>>>>', data);
-                        this.setState((preState) => {
-                            if (!reload) {
-                                return {
-                                    data: preState.data.concat(data),
-                                    refreshing: false,
-                                };
-                            } else {
-                                return {
-                                    data: data,
-                                    refreshing: false,
-                                };
-                            }
-                        });
-                    },
-                    err => {
-                        ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
-                    },
-                    () => {
-                        console.log("complete");
-                        onLoadCompleted && onLoadCompleted();
-                    }
-                );
+                            const data = [];
+                            contentlist.forEach((item) => {
+                                data.push({
+                                    pic: item.contentImg,
+                                    avatar: item.userLogo,
+                                    name: item.userName,
+                                    title: item.title,
+                                    date: item.date,
+                                    read: item.read_num,
+                                    like: item.like_num,
+                                    url: item.url,
+                                })
+                            });
+                            // console.log('getArticles:data >>>>>>>>>>>>>>>>>>', data);
+                            this.setState((preState) => {
+                                if (!reload) {
+                                    return {
+                                        data: preState.data.concat(data),
+                                        refreshing: false,
+                                    };
+                                } else {
+                                    return {
+                                        data: data,
+                                        refreshing: false,
+                                    };
+                                }
+                            });
+                        },
+                        err => {
+                            ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
+                        },
+                        () => {
+                            console.log("complete");
+                            this.hasGotData = true;
+                            onLoadCompleted && onLoadCompleted();
+                        }
+                    )
+            );
         }
     }
 
     componentDidMount() {
+        this.init();
         this._loadData(true);
+    }
+
+    componentWillUnmount() {
+        ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
+        this.init();
+        this.subscriptions.forEach(subscription => {
+            subscription.dispose();
+        })
     }
 
     _onItemClick(item) {
@@ -162,8 +188,8 @@ export default class WxReadArticleList extends Component {
                 <FlatList style={styles.container}
                           refreshing={this.state.refreshing}
                           onRefresh={() => {
-                              this._loadData(true,()=>{
-                                  ToastAndroid.show('已刷新最新数据',ToastAndroid.SHORT)
+                              this._loadData(true, () => {
+                                  ToastAndroid.show('已刷新最新数据', ToastAndroid.SHORT)
                               });
                           }}
                           renderItem={this._renderItem.bind(this)}
@@ -189,16 +215,28 @@ export default class WxReadArticleList extends Component {
                               );
                           }}
                           ListFooterComponent={() => {
-                              if (this.state.data.length > 0) {
-                                  return (
-                                      <View/>
-                                  )
+                              console.log("ListFooterComponent", this.currentPage, this.allPages);
+                              if (this.hasGotData) {
+                                  if (this.currentPage > this.allPages) {
+                                      return (
+                                          <View style={styles.separators}>
+                                              <Text style={{
+                                                  fontSize: 12,
+                                                  color: COLOR_THEME_BASE,
+                                              }}>------- 底线 ↶_↶ -------</Text>
+                                          </View>
+                                      )
+                                  } else {
+                                      return (
+                                          <View style={styles.separators}>
+                                              <ActivityIndicator size="small"
+                                                                 color={COLOR_THEME_BASE}/>
+                                          </View>
+                                      )
+                                  }
+                              } else {
+                                  return <View/>;
                               }
-                              return (
-                                  <View style={[styles.separators, {alignItems: 'center'}]}>
-                                      <Text>我是有底线的(。・`ω´・)</Text>
-                                  </View>
-                              )
                           }}
                           data={this.state.data}
                 />

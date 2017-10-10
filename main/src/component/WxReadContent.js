@@ -52,8 +52,11 @@ export default class WxReadContent extends Component {
                   tabLabel={channel}>
                 <WxReadArticleList key={channelid}
                                    typeId={channelid}
-                                   onItemClick={({url}) => {
-                                       this.props.screenProps.rootNavigation.navigate('Read', {uri: url})
+                                   onItemClick={({url, title}) => {
+                                       this.props.screenProps.rootNavigation.navigate('Read', {
+                                           uri: url,
+                                           title: title
+                                       })
                                    }}
                                    {...this.props}/>
             </View>
@@ -69,6 +72,9 @@ export default class WxReadContent extends Component {
                 tabBarInactiveTextColor={COLOR_THEME_BASE}
                 tabBarBackgroundColor={'white'}
                 tabBarTextStyle={style.tabBarTextStyle}
+                onChangeTab={({i, ref}) => {
+                    console.log(i, ref);
+                }}
                 initialPage={0}>
                 {this.props.tabs.map((item, index) => this._renderPage(item, index))}
             </ScrollableTabView>

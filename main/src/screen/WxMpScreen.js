@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View,Image} from 'react-native';
+import WxMpItem from '../component/WxMpItem'
 
 const styles = StyleSheet.create({
     container: {
@@ -7,24 +8,21 @@ const styles = StyleSheet.create({
     }
 });
 
-class NewsScreen extends Component {
+class WxMpScreen extends Component {
 
     constructor(props) {
         super(props);
     }
 
-    _onBtnClick() {
-        this.props.screenProps.rootNavigation.navigate('Read');
-    }
 
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>NewsScreen</Text>
+                <WxMpItem/>
             </View>
         )
     }
 }
 
-export default NewsScreen;
+export default WxMpScreen;

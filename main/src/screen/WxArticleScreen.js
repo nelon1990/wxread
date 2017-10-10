@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, ToastAndroid, View} from 'react-native';
-import {WxReadHeader, WxReadTabList} from '../component/index'
-import {WxReadApi, WxReadApi2} from '../api/index'
+import {StyleSheet, ToastAndroid, View, ActivityIndicator, Text} from 'react-native';
+import {WxReadContent} from '../component/index'
+import {WxReadApi2} from '../api/index'
+import {COLOR_THEME_BASE} from '../theme'
 
 const styles = StyleSheet.create({
     container: {
@@ -66,11 +67,17 @@ export default class WxArticleScreen extends Component {
     _renderContent() {
         if (this.state.hasGotTabs) {
             return (
-                <WxReadTabList tabs={this.state.tabs}
+                <WxReadContent tabs={this.state.tabs}
                                {...this.props}/>
             );
         } else {
-            <View/>
+            return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <ActivityIndicator color={COLOR_THEME_BASE}
+                                       size="large"/>
+                    <Text style={{color: COLOR_THEME_BASE}}>加载啊加载....\("▔□▔)/</Text>
+                </View>
+            )
         }
     }
 };

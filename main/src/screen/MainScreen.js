@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import {TabNavigator} from 'react-navigation';
 import {StyleSheet, View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import NewsScreen from "./NewsScreen";
+import WxMpScreen from "./WxMpScreen";
 import WxArticleScreen from "./WxArticleScreen";
-import WxReadHeader from "../component/WxReadHeader";
+import WxReadHeader from "../component/WxReadSearchHeader";
+import {COLOR_THEME_BASE} from '../theme'
 
 let style = StyleSheet.create({
     tabBar: {
@@ -20,43 +21,40 @@ let style = StyleSheet.create({
     },
 });
 
-const routeConfig = {
-    WxArticle: {
-        screen: WxArticleScreen,
-        navigationOptions: ({navigation, screenProps}) => ({
-            tabBarLabel: '文章',
-            tabBarIcon: () => (
-                <Icon
-                    style={style.icon}
-                    name={"description"}  // 图标
-                    size={24}
-                    color={'darkblue'}/>
-            )
-        })
-    },
-    News: {
-        screen: NewsScreen,
-        navigationOptions: ({navigation, screenProps}) => ({
-            tabBarLabel: '公众号',
-            tabBarIcon: () => (
-                <Icon
-                    style={style.icon}
-                    name={"face"}  // 图标
-                    size={24}
-                    color={'darkblue'}/>
-            )
-        })
-    },
-};
-
-console.log(routeConfig);
-
 const Tab = TabNavigator(
-    routeConfig,
+    {
+        WxArticle: {
+            screen: WxArticleScreen,
+            navigationOptions: ({navigation, screenProps}) => ({
+                tabBarLabel: '文章',
+                tabBarIcon: () => (
+                    <Icon
+                        style={style.icon}
+                        name={"description"}  // 图标
+                        size={24}
+                        color={COLOR_THEME_BASE}/>
+                )
+            })
+        },
+        WxMp: {
+            screen: WxMpScreen,
+            navigationOptions: ({navigation, screenProps}) => ({
+                tabBarLabel: '公众号',
+                tabBarIcon: () => (
+                    <Icon
+                        style={style.icon}
+                        name={"face"}  // 图标
+                        size={24}
+                        color={COLOR_THEME_BASE}/>
+                )
+            })
+        },
+    },
     {
         tabBarPosition: 'bottom',
         animationEnabled: false,
         lazy: true,
+        initialRouteName:'WxMp',
         tabBarOptions: {
             tabStyle: {
                 padding: 0,
@@ -69,7 +67,7 @@ const Tab = TabNavigator(
                 fontSize: 12,
                 color: 'darkblue',
                 marginTop: 0,
-                fontWeight:'bold'
+                fontWeight: 'bold'
             },
             iconStyle: {
                 margin: 0
@@ -81,7 +79,7 @@ const Tab = TabNavigator(
             showLabel: true,
             pressColor: 'lightblue',
         },
-        swipeEnabled:false,
+        swipeEnabled: false,
     }
 );
 

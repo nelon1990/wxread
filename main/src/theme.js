@@ -1,5 +1,5 @@
-const COLOR_THEME_BASE = 'darkblue';
-const COLOR_THEME_BASE_LIGHT = 'lightblue';
+const COLOR_THEME_BASE = "#00008bff";
+const COLOR_THEME_BASE_LIGHT = "#3d609eff";
 
 
 class Color {

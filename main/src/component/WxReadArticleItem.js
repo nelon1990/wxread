@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text, Dimensions} from 'react-native'
+import {StyleSheet, View, Image, Text, Dimensions, ToastAndroid} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -133,23 +133,23 @@ export default class WxReadArticleItem extends Component {
         mounted = true;
         const data = this.state.data;
         Image.getSize(data.pic, (w, h) => {
-            const height = h / w * screenWidth;
-
-            this.setState({
-                picHeight: height,
-                picWidth: screenWidth,
-                hasGotPicSize: true
-            });
+            if (mounted) {
+                const height = h / w * screenWidth;
+                this.setState({
+                    picHeight: height,
+                    picWidth: screenWidth,
+                    hasGotPicSize: true
+                });
+            }
+            /* else {
+                            ToastAndroid.show('unmount', ToastAndroid.SHORT);
+                        }*/
         }, () => {
         })
     }
 
     componentWillUnmount() {
         mounted = false;
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return mounted;
     }
 
     render() {
