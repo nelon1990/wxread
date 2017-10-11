@@ -18,10 +18,7 @@ let style = StyleSheet.create({
         borderWidth: 1,
         paddingRight: 6,
         alignItems: 'center',
-        borderTopLeftRadius: 999,
-        borderBottomLeftRadius: 999,
-        borderTopRightRadius: 999,
-        borderBottomRightRadius: 999,
+        borderRadius: 999,
     },
     iconLeft: {
         height: 20,

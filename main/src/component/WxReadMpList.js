@@ -14,13 +14,14 @@ import {WxReadArticleItem} from './index'
 import {WxReadApi2} from '../api/index'
 import {COLOR_THEME_BASE} from '../theme'
 import {ToastAndroid} from "react-native";
+import WxMpItem from "./WxMpItem";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
     separators: {
-        height: 24,
+        height: 12,
         width: Dimensions.get('window').width,
         justifyContent: 'center',
         alignItems: 'center',
@@ -29,28 +30,28 @@ const styles = StyleSheet.create({
     }
 });
 
-export default class WxReadArticleList extends Component {
+export default class WxReadMpList extends Component {
     static propTypes = {
         data: React.PropTypes.array,
-        typeId: React.PropTypes.string,
+        id: React.PropTypes.string,
         onItemClick: React.PropTypes.func,
     };
 
     static defaultProps = {
+        id: '63',
         data: []
     };
 
     constructor(props) {
         super();
-        if (!props.data) {
-            props.data = []
-        }
+
+        console.log('WxReadMpList:constructor', props);
 
         this.state = {
             data: props.data,
+            id: props.id,
             refreshing: true,
         };
-
 
         this.subscriptions = [];
     }
@@ -69,10 +70,10 @@ export default class WxReadArticleList extends Component {
         }
         if (this.currentPage <= this.allPages) {
             this.subscriptions.push(
-                WxReadApi2.getArticles('', this.currentPage++, this.props.typeId)
+                WxReadApi2.getMps('', this.currentPage++, this.state.id, '')
                     .subscribe(
                         result => {
-                            // console.log('getArticles:result >>>>>>>>>>>>>>>>>>', result);
+                            // console.log('getMps:result >>>>>>>>>>>>>>>>>>', result);
                             const allNum = result.showapi_res_body.pagebean.allNum;
                             this.allPages = result.showapi_res_body.pagebean.allPages;
 
@@ -81,17 +82,22 @@ export default class WxReadArticleList extends Component {
                             const data = [];
                             contentlist.forEach((item) => {
                                 data.push({
-                                    pic: item.contentImg,
+                                    name: item.pubNum,
                                     avatar: item.userLogo,
-                                    name: item.userName,
-                                    title: item.title,
-                                    date: item.date,
-                                    read: item.read_num,
-                                    like: item.like_num,
-                                    url: item.url,
+                                    account: item.weiNum,
+                                    tags: item.tag
+                                        .trim()
+                                        .replace(new RegExp("/","gm")," ")
+                                        .replace(new RegExp(",","gm")," ")
+                                        .replace(new RegExp("，","gm")," ")
+                                        .replace(new RegExp("  ","gm")," ")
+                                        .replace(new RegExp(" ","gm")," ")
+                                        .replace(new RegExp(' ',"gm")," ")
+                                        .split(" "),
+                                    qrCode: item.code2img,
                                 })
                             });
-                            // console.log('getArticles:data >>>>>>>>>>>>>>>>>>', data);
+                            console.log('getMps:data >>>>>>>>>>>>>>>>>>', data);
                             this.setState((preState) => {
                                 if (!reload) {
                                     return {
@@ -132,38 +138,22 @@ export default class WxReadArticleList extends Component {
         })
     }
 
-    _onItemClick(item) {
-        if (this.props.onItemClick) {
-            this.props.onItemClick(item);
-        } else {
-
-        }
-    }
-
 
     _renderItem({item, index}) {
         console.log('_renderItem', item);
         const {
-            pic,
-            avatar,
             name,
-            title,
-            date,
-            read,
-            like,
+            avatar,
+            account,
+            tags,
+            qrCode
         } = item;
 
         return (
-            <TouchableNativeFeedback onPress={this._onItemClick.bind(this, item)}>
-                <WxReadArticleItem pic={pic}
-                                   avatar={avatar}
-                                   name={name}
-                                   title={title}
-                                   date={date}
-                                   read={Number(read)}
-                                   like={Number(like)}
-                />
-            </TouchableNativeFeedback>
+            <WxMpItem account={account}
+                      name={name}
+                      tags={tags}
+                      avatar={avatar}/>
         );
     }
 

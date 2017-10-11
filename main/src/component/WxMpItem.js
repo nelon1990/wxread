@@ -1,91 +1,141 @@
 import React, {Component} from 'react';
 import {Image, View, StyleSheet, Dimensions, TouchableNativeFeedback, Text} from "react-native";
-import {COLOR_THEME_BASE} from '../theme'
+import {COLOR_THEME_BASE, COLOR_THEME_BASE_LIGHT} from '../theme'
+import Icon from 'react-native-vector-icons/Ionicons'
 
-const qrCodeSize = 60;
-const itemHeight = 240;
+const itemHeight = 84;
+const qrCodeSize = itemHeight / 2.5;
 const itemWidth = Dimensions.get('window').width;
-const userImgFlex = 3;
-const infoFlex = 1;
-const nameFontSize = 24;
+const nameFontSize = 16;
+const accountFontSize = nameFontSize / 1.5;
+const accountFontColor = COLOR_THEME_BASE_LIGHT;
+const tagFontSize = nameFontSize / 1.8;
+const tagFontColor = COLOR_THEME_BASE;
+
 
 const style = StyleSheet.create({
     container: {
         width: itemWidth,
         height: itemHeight,
         backgroundColor: 'white',
+        flexDirection: 'row',
+        alignItems: 'center',
+        // elevation: 2,
     },
     user: {
-        flex: userImgFlex,
-        flexWrap: 'wrap',
-        justifyContent: 'flex-end',
-        // alignItems: 'flex-end',
+        height: itemHeight,
+        width: itemHeight,
     },
     info: {
-        flex: infoFlex,
+        flex: 1,
+        justifyContent: 'center',
+        paddingLeft: 8,
     },
     qrCodeContainer: {
         width: qrCodeSize,
         height: qrCodeSize,
-        borderTopLeftRadius: qrCodeSize,
-        borderTopRightRadius: qrCodeSize,
-        borderBottomLeftRadius: qrCodeSize,
-        borderBottomRightRadius: qrCodeSize,
-        backgroundColor: 'white',
+        borderRadius: qrCodeSize,
+        backgroundColor: COLOR_THEME_BASE,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 6,
-
-        // position: 'absolute',
-        top: qrCodeSize / 2,
-        left: itemWidth - qrCodeSize - qrCodeSize / 4,
+        elevation: 12,
+        marginRight: qrCodeSize / 1.5,
     },
     qrCode: {
         width: qrCodeSize * 0.75,
         height: qrCodeSize * 0.75,
-        tintColor: COLOR_THEME_BASE,
+        tintColor: 'white',
     },
     name: {
-        color: 'white',
-        textShadowColor: 'black',
-        textShadowOffset: {
-            width: 1,
-            height: 1,
-        },
         fontSize: nameFontSize,
+        color: COLOR_THEME_BASE,
         fontWeight: 'bold',
-        position: 'absolute',
-        left: qrCodeSize / 4,
-        top: itemHeight * userImgFlex / (userImgFlex + infoFlex) - nameFontSize - qrCodeSize / 4,
-        textShadowRadius: nameFontSize / 4,
+    },
+    account: {
+        fontSize: accountFontSize,
+        color: accountFontColor,
+    },
+    tag: {
+        fontWeight: 'bold',
+        fontSize: tagFontSize,
+        color: 'white',
+        borderRadius: tagFontSize,
+        backgroundColor: tagFontColor,
+        marginTop: 4,
+        paddingLeft: tagFontSize / 1.5,
+        paddingRight: tagFontSize / 1.5,
+        marginRight: 2,
     },
 });
 
 export default class WxMpItem extends Component {
+    static propTypes = {
+        name: React.PropTypes.string,
+        account: React.PropTypes.string,
+        avatar: React.PropTypes.string,
+        tags: React.PropTypes.arrayOf(React.PropTypes.string),
+    };
+
+    static defaultProps = {
+        name: '阿里云',
+        account: 'aliyun',
+        avatar: 'https://ss0.bdstatic.com/-0U0bnSm1A5BphGlnYG/tam-ogel/4789a23bb41083890b90a711470d037d_259_194.jpg',
+        tags: ['互联网', '科技'],
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            name: props.name,
+            account: props.account,
+            avatar: props.avatar,
+            tags: props.tags,
+        };
+    }
+
+
     render() {
         return (
             <View style={style.container}>
                 <Image style={style.user}
-                       source={{uri: 'http://app1.showapi.com/weixin_info/pubNum/13b64105-6f47-4c1c-8ee6-25b7af319582.jpg'}}>
+                       source={{uri: this.state.avatar}}>
+                </Image>
 
+
+                <View style={style.info}>
                     <Text style={style.name}>
-                        STRETAG思锐泰格
+                        {this.state.name}
+                    </Text>
+                    <Text style={style.account}>
+                        <Icon
+                            name={"md-person"}  // 图标
+                            size={accountFontSize}
+                            color={accountFontColor}
+                        />
+                        {' '}
+                        {this.state.account}
                     </Text>
 
-
-                    <TouchableNativeFeedback>
-                        <View style={style.qrCodeContainer}>
-                            <Image style={style.qrCode}
-                                   source={require('../../res/ic_qrcode_black_48dp.png')}>
-                            </Image>
-                        </View>
-                    </TouchableNativeFeedback>
-
-                </Image>
-                <View style={style.info}>
-
+                    <View style={{flexDirection: 'row'}}>
+                        {
+                            this.state.tags.map((tag) => {
+                                if ((tag.replace(' ', '').length) !== 0) {
+                                    return <Text key={tag} style={style.tag}
+                                                 numberOfLines={1}>{tag}</Text>;
+                                }
+                            })
+                        }
+                    </View>
                 </View>
 
+                <TouchableNativeFeedback>
+                    <View style={style.qrCodeContainer}>
+                        <Image style={style.qrCode}
+                               source={require('../../res/ic_qrcode_black_48dp.png')}>
+                        </Image>
+                    </View>
+                </TouchableNativeFeedback>
             </View>
         );
     }

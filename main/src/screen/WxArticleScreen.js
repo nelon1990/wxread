@@ -21,10 +21,10 @@ export default class WxArticleScreen extends Component {
     }
 
     componentDidMount() {
-        WxReadApi2.getTypeList()
+        WxReadApi2.getArticleTypeList()
             .subscribe(
                 result => {
-                    console.log('getTypeList >>>>>>>>>>>>>>>>>>', result);
+                    console.log('getArticleTypeList >>>>>>>>>>>>>>>>>>', result);
                     const tabs = [];
 
                     result.showapi_res_body.typeList.forEach(({id, name}) => {
@@ -38,7 +38,7 @@ export default class WxArticleScreen extends Component {
                         return Number(a.channelid) - Number(b.channelid);
                     });
 
-                    console.log('getTypeList >>>>>>>>>>>>>>>>>>', tabs);
+                    console.log('getArticleTypeList >>>>>>>>>>>>>>>>>>', tabs);
                     this.setState({
                         tabs: tabs,
                         hasGotTabs: true
