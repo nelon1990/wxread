@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, View, StyleSheet, Dimensions, TouchableNativeFeedback, Text} from "react-native";
+import {Image, View, StyleSheet, Dimensions, TouchableNativeFeedback, Text, ScrollView} from "react-native";
 import {COLOR_THEME_BASE, COLOR_THEME_BASE_LIGHT} from '../theme'
 import Icon from 'react-native-vector-icons/Ionicons'
 
@@ -30,6 +30,8 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         paddingLeft: 8,
+        // backgroundColor:'gray',
+        borderColor: 'gray',
     },
     qrCodeContainer: {
         width: qrCodeSize,
@@ -74,13 +76,18 @@ export default class WxMpItem extends Component {
         account: React.PropTypes.string,
         avatar: React.PropTypes.string,
         tags: React.PropTypes.arrayOf(React.PropTypes.string),
+        qrCode: React.PropTypes.string,
+        onShowQrCodeClick: React.PropTypes.func,
     };
 
     static defaultProps = {
-        name: '阿里云',
-        account: 'aliyun',
-        avatar: 'https://ss0.bdstatic.com/-0U0bnSm1A5BphGlnYG/tam-ogel/4789a23bb41083890b90a711470d037d_259_194.jpg',
-        tags: ['互联网', '科技'],
+        name: '',
+        account: '',
+        avatar: '',
+        tags: [''],
+        qrCode: '',
+        onShowQrCodeClick: () => {
+        },
     };
 
     constructor(props) {
@@ -117,7 +124,10 @@ export default class WxMpItem extends Component {
                         {this.state.account}
                     </Text>
 
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                    }}>
                         {
                             this.state.tags.map((tag) => {
                                 if ((tag.replace(' ', '').length) !== 0) {
@@ -129,7 +139,7 @@ export default class WxMpItem extends Component {
                     </View>
                 </View>
 
-                <TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={this.props.onShowQrCodeClick.bind(this, this.props.qrCode)}>
                     <View style={style.qrCodeContainer}>
                         <Image style={style.qrCode}
                                source={require('../../res/ic_qrcode_black_48dp.png')}>

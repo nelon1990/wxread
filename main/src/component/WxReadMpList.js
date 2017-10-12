@@ -3,16 +3,15 @@ import {
     FlatList,
     StyleSheet,
     Text,
-    TouchableNativeFeedback,
+    Modal,
     View,
     RefreshControl,
     ScrollView,
     Dimensions,
-    ActivityIndicator
+    ActivityIndicator, BackHandler, Image, TouchableWithoutFeedback,
 } from 'react-native'
-import {WxReadArticleItem} from './index'
 import {WxReadApi2} from '../api/index'
-import {COLOR_THEME_BASE} from '../theme'
+import {COLOR_THEME_BASE, Color} from '../theme'
 import {ToastAndroid} from "react-native";
 import WxMpItem from "./WxMpItem";
 
@@ -38,7 +37,7 @@ export default class WxReadMpList extends Component {
     };
 
     static defaultProps = {
-        id: '63',
+        id: '',
         data: []
     };
 
@@ -51,6 +50,8 @@ export default class WxReadMpList extends Component {
             data: props.data,
             id: props.id,
             refreshing: true,
+            showQrCode: false,
+            qrCode: '',
         };
 
         this.subscriptions = [];
@@ -80,6 +81,7 @@ export default class WxReadMpList extends Component {
                             const contentlist = result.showapi_res_body.pagebean.contentlist;
 
                             const data = [];
+                            console.log('getMps:contentlist >>>>>>>>>>>>>>>>>>', contentlist);
                             contentlist.forEach((item) => {
                                 data.push({
                                     name: item.pubNum,
@@ -87,13 +89,11 @@ export default class WxReadMpList extends Component {
                                     account: item.weiNum,
                                     tags: item.tag
                                         .trim()
-                                        .replace(new RegExp("/","gm")," ")
-                                        .replace(new RegExp(",","gm")," ")
-                                        .replace(new RegExp("，","gm")," ")
-                                        .replace(new RegExp("  ","gm")," ")
-                                        .replace(new RegExp(" ","gm")," ")
-                                        .replace(new RegExp(' ',"gm")," ")
-                                        .split(" "),
+                                        .replace(new RegExp("/", "gm"), "|")
+                                        .replace(new RegExp(",", "gm"), "|")
+                                        .replace(new RegExp("，", "gm"), "|")
+                                        .replace(/\s+/g, '|')
+                                        .split("|"),
                                     qrCode: item.code2img,
                                 })
                             });
@@ -128,6 +128,17 @@ export default class WxReadMpList extends Component {
     componentDidMount() {
         this.init();
         this._loadData(true);
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            ToastAndroid.show('hardwareBackPress', ToastAndroid.SHORT);
+            if (this.state.showQrCode) {
+                this.setState({
+                    showQrCode: false,
+                });
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
 
     componentWillUnmount() {
@@ -153,7 +164,15 @@ export default class WxReadMpList extends Component {
             <WxMpItem account={account}
                       name={name}
                       tags={tags}
-                      avatar={avatar}/>
+                      qrCode={qrCode}
+                      avatar={avatar}
+                      onShowQrCodeClick={(qrCode) => {
+                          // ToastAndroid.show(qrCode, ToastAndroid.SHORT);
+                          this.setState({
+                              showQrCode: true,
+                              qrCode: qrCode,
+                          });
+                      }}/>
         );
     }
 
@@ -163,6 +182,15 @@ export default class WxReadMpList extends Component {
                 flex: 1,
                 flexDirection: 'column'
             }}>
+                <Modal animationType="fade"
+                       transparent={true}
+                       onRequestClose={() => {
+                       }}
+                       visible={this.state.showQrCode}>
+                    {this._renderWindow()}
+                </Modal>
+
+
                 <FlatList style={styles.container}
                           refreshing={this.state.refreshing}
                           onRefresh={() => {
@@ -219,6 +247,27 @@ export default class WxReadMpList extends Component {
                           data={this.state.data}
                 />
             </View>
-        )
+        );
+    }
+
+    _renderWindow() {
+        return (
+            <TouchableWithoutFeedback onPress={() => {
+                this.setState({
+                    showQrCode: false,
+                });
+            }}>
+                <View style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <Image style={{width: 240, height: 240}}
+                           source={{uri: this.state.qrCode}}
+                    />
+                </View>
+            </TouchableWithoutFeedback>
+        );
     }
 }
