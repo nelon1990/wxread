@@ -54,7 +54,7 @@ const Tab = TabNavigator(
         tabBarPosition: 'bottom',
         animationEnabled: false,
         lazy: true,
-        initialRouteName:'WxMp',
+        initialRouteName:'WxArticle',
         tabBarOptions: {
             tabStyle: {
                 padding: 0,

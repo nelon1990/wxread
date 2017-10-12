@@ -8,10 +8,10 @@ import {
     RefreshControl,
     ScrollView,
     Dimensions,
-    ActivityIndicator, BackHandler, Image, TouchableWithoutFeedback,
+    ActivityIndicator, Image, TouchableWithoutFeedback,
 } from 'react-native'
 import {WxReadApi2} from '../api/index'
-import {COLOR_THEME_BASE, Color} from '../theme'
+import {COLOR_THEME_BASE} from '../theme'
 import {ToastAndroid} from "react-native";
 import WxMpItem from "./WxMpItem";
 
@@ -128,17 +128,6 @@ export default class WxReadMpList extends Component {
     componentDidMount() {
         this.init();
         this._loadData(true);
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            ToastAndroid.show('hardwareBackPress', ToastAndroid.SHORT);
-            if (this.state.showQrCode) {
-                this.setState({
-                    showQrCode: false,
-                });
-                return true;
-            } else {
-                return false;
-            }
-        });
     }
 
     componentWillUnmount() {
