@@ -61,6 +61,7 @@ export default class WxReadApi {
     }
 
     static getArticles(key, page, typeId) {
+        console.log('Api:getArticles', PATH_GET_ARTICLES + '?key=' + key + '&' + 'page=' + page + '&' + 'id=' + typeId);
         return Rx.Observable.create(subscriber => {
             fetch(PATH_GET_ARTICLES + '?key=' + key + '&' + 'page=' + page + '&' + 'id=' + typeId,
                 {

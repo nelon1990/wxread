@@ -12,7 +12,7 @@ const style = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     tabBarUnderlineStyle: {
-        backgroundColor: COLOR_THEME_BASE,
+        // backgroundColor: COLOR_THEME_BASE,
         height: 3,
     },
     tabBar: {
@@ -44,7 +44,7 @@ export default class WxReadContent extends Component {
     }
 
     _renderPage({channel, channelid}, index) {
-        console.log('WxReadContent', this.props);
+        console.log('WxReadContent', "channel:".concat(channel), "channelid:".concat(channelid));
         return (
             <View style={{flex: 1}}
                   key={channelid}
@@ -64,20 +64,25 @@ export default class WxReadContent extends Component {
     }
 
     render() {
+        if (this.props.tabs.length > 0) {
+            // ToastAndroid.show('render ScrollableTabView', ToastAndroid.SHORT);
+            return (
+                <ScrollableTabView
+                    renderTabBar={() => <ScrollableTabBar style={style.tabBar}/>}
+                    tabBarUnderlineStyle={style.tabBarUnderlineStyle}
+                    tabBarInactiveTextColor={COLOR_THEME_BASE}
+                    tabBarBackgroundColor={'white'}
+                    tabBarTextStyle={style.tabBarTextStyle}
+                    onChangeTab={({i, ref}) => {
+                        console.log(i, ref);
+                    }}>
+                    {this.props.tabs.map((item, index) => this._renderPage(item, index))}
+                </ScrollableTabView>
+            );
+        } else {
+            ToastAndroid.show('render empty', ToastAndroid.SHORT);
+            return <View/>;
+        }
 
-        return (
-            <ScrollableTabView
-                renderTabBar={() => <ScrollableTabBar style={style.tabBar}/>}
-                tabBarUnderlineStyle={style.tabBarUnderlineStyle}
-                tabBarInactiveTextColor={COLOR_THEME_BASE}
-                tabBarBackgroundColor={'white'}
-                tabBarTextStyle={style.tabBarTextStyle}
-                onChangeTab={({i, ref}) => {
-                    console.log(i, ref);
-                }}
-                initialPage={0}>
-                {this.props.tabs.map((item, index) => this._renderPage(item, index))}
-            </ScrollableTabView>
-        );
     }
 }

@@ -131,16 +131,16 @@ export default class WxReadMpList extends Component {
     }
 
     componentWillUnmount() {
-        ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
+        // ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
         this.init();
         this.subscriptions.forEach(subscription => {
-            subscription.dispose();
+            subscription.unsubscribe();
         })
     }
 
 
     _renderItem({item, index}) {
-        console.log('_renderItem', item);
+        // console.log('_renderItem', item);
         const {
             name,
             avatar,

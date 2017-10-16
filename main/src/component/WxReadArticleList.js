@@ -72,7 +72,7 @@ export default class WxReadArticleList extends Component {
                 WxReadApi2.getArticles('', this.currentPage++, this.props.typeId)
                     .subscribe(
                         result => {
-                            // console.log('getArticles:result >>>>>>>>>>>>>>>>>>', result);
+                            console.log('getArticles:result >>>>>>>>>>>>>>>>>>', result);
                             const allNum = result.showapi_res_body.pagebean.allNum;
                             this.allPages = result.showapi_res_body.pagebean.allPages;
 
@@ -91,7 +91,7 @@ export default class WxReadArticleList extends Component {
                                     url: item.url,
                                 })
                             });
-                            // console.log('getArticles:data >>>>>>>>>>>>>>>>>>', data);
+                            console.log('getArticles:data >>>>>>>>>>>>>>>>>>', data);
                             this.setState((preState) => {
                                 if (!reload) {
                                     return {
@@ -125,10 +125,10 @@ export default class WxReadArticleList extends Component {
     }
 
     componentWillUnmount() {
-        ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
+        // ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
         this.init();
         this.subscriptions.forEach(subscription => {
-            subscription.dispose();
+            subscription.unsubscribe();
         })
     }
 
@@ -142,7 +142,7 @@ export default class WxReadArticleList extends Component {
 
 
     _renderItem({item, index}) {
-        console.log('_renderItem', item);
+        // console.log('_renderItem', item);
         const {
             pic,
             avatar,
@@ -203,7 +203,7 @@ export default class WxReadArticleList extends Component {
                               );
                           }}
                           ListFooterComponent={() => {
-                              console.log("ListFooterComponent", this.currentPage, this.allPages);
+                              // console.log("ListFooterComponent", this.currentPage, this.allPages);
                               if (this.hasGotData) {
                                   if (this.currentPage > this.allPages) {
                                       return (
