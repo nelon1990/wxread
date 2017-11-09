@@ -52,7 +52,7 @@ export default class WxReadArticleList extends Component {
         };
 
 
-        this.subscriptions = [];
+        this.requests = [];
     }
 
 
@@ -64,34 +64,35 @@ export default class WxReadArticleList extends Component {
 
 
     _loadData(reload, onLoadCompleted) {
+        console.log("_loadData", reload, onLoadCompleted);
+
         if (reload) {
             this.init()
         }
         if (this.currentPage <= this.allPages) {
-            this.subscriptions.push(
-                WxReadApi2.getArticles('', this.currentPage++, this.props.typeId)
-                    .subscribe(
-                        result => {
-                            console.log('getArticles:result >>>>>>>>>>>>>>>>>>', result);
-                            const allNum = result.showapi_res_body.pagebean.allNum;
-                            this.allPages = result.showapi_res_body.pagebean.allPages;
+            this.requests.push(
+                WxReadApi2.getArticles2('', this.currentPage++, this.props.typeId)
+                    .then(
+                        json => {
+                            console.log('getArticles:json', json);
+                            this.allPages = json.showapi_res_body.pagebean.allPages;
 
-                            const contentlist = result.showapi_res_body.pagebean.contentlist;
+                            const contentlist = json.showapi_res_body.pagebean.contentlist;
 
                             const data = [];
                             contentlist.forEach((item) => {
                                 data.push({
-                                    pic: item.contentImg,
-                                    avatar: item.userLogo,
                                     name: item.userName,
                                     title: item.title,
+                                    pic: item.contentImg,
                                     date: item.date,
                                     read: item.read_num,
                                     like: item.like_num,
+                                    avatar: item.userLogo,
                                     url: item.url,
                                 })
                             });
-                            console.log('getArticles:data >>>>>>>>>>>>>>>>>>', data);
+                            console.log('getArticles:data', data);
                             this.setState((preState) => {
                                 if (!reload) {
                                     return {
@@ -105,30 +106,29 @@ export default class WxReadArticleList extends Component {
                                     };
                                 }
                             });
-                        },
-                        err => {
-                            ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
-                        },
-                        () => {
+
                             console.log("complete");
                             this.hasGotData = true;
                             onLoadCompleted && onLoadCompleted();
                         }
                     )
+                    .catch(err => {
+                        ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
+                    })
             );
         }
     }
 
     componentDidMount() {
         this.init();
-        this._loadData(true);
+        // this._loadData(true);
     }
 
     componentWillUnmount() {
         // ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
         this.init();
-        this.subscriptions.forEach(subscription => {
-            subscription.unsubscribe();
+        this.requests.forEach(request => {
+            // request.unsubscribe();
         })
     }
 

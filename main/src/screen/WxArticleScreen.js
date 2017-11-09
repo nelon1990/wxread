@@ -21,13 +21,44 @@ export default class WxArticleScreen extends Component {
     }
 
     componentDidMount() {
-        WxReadApi2.getArticleTypeList()
-            .subscribe(
-                result => {
-                    console.log('getArticleTypeList >>>>>>>>>>>>>>>>>>', result);
+        // WxReadApi2.getArticleTypeList()
+        //     .subscribe(
+        //         result => {
+        //             console.log('getArticleTypeList >>>>>>>>>>>>>>>>>>', result);
+        //             const tabs = [];
+        //
+        //             result.showapi_res_body.typeList.forEach(({id, name}) => {
+        //                 tabs.push({
+        //                     channel: name,
+        //                     channelid: id,
+        //                 })
+        //             });
+        //
+        //             tabs.sort((a, b) => {
+        //                 return Number(a.channelid) - Number(b.channelid);
+        //             });
+        //
+        //             console.log('getArticleTypeList >>>>>>>>>>>>>>>>>>', tabs);
+        //             this.setState({
+        //                 tabs: tabs,
+        //                 hasGotTabs: true
+        //             });
+        //         },
+        //         err => {
+        //             ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
+        //         },
+        //         () => {
+        //             console.log("complete")
+        //         }
+        //     );
+
+        WxReadApi2.getArticleTypeList2()
+            .then(
+                json => {
+                    console.log('getArticleTypeList >>>>>>>>>>>>>>>>>>', json);
                     const tabs = [];
 
-                    result.showapi_res_body.typeList.forEach(({id, name}) => {
+                    json.showapi_res_body.typeList.forEach(({id, name}) => {
                         tabs.push({
                             channel: name,
                             channelid: id,
@@ -44,13 +75,10 @@ export default class WxArticleScreen extends Component {
                         hasGotTabs: true
                     });
                 },
-                err => {
-                    ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
-                },
-                () => {
-                    console.log("complete")
-                }
-            );
+            )
+            .catch(err => {
+                ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
+            });
     }
 
 

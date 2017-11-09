@@ -14,7 +14,7 @@
       android:name=".MainApplication"
       android:allowBackup="true"
       android:label="@string/app_name"
-      android:icon="@mipmap/fly_06"
+      android:icon="@mipmap/baconreader"
       android:theme="@style/AppTheme">
       <activity
         android:name=".MainActivity"

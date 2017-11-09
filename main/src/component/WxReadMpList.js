@@ -54,7 +54,7 @@ export default class WxReadMpList extends Component {
             qrCode: '',
         };
 
-        this.subscriptions = [];
+        this.requests = [];
     }
 
 
@@ -70,9 +70,9 @@ export default class WxReadMpList extends Component {
             this.init()
         }
         if (this.currentPage <= this.allPages) {
-            this.subscriptions.push(
-                WxReadApi2.getMps('', this.currentPage++, this.state.id, '')
-                    .subscribe(
+            this.requests.push(
+                WxReadApi2.getMps2('', this.currentPage++, this.state.id, '')
+                    .then(
                         result => {
                             // console.log('getMps:result >>>>>>>>>>>>>>>>>>', result);
                             const allNum = result.showapi_res_body.pagebean.allNum;
@@ -111,16 +111,15 @@ export default class WxReadMpList extends Component {
                                     };
                                 }
                             });
-                        },
-                        err => {
-                            ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
-                        },
-                        () => {
+
                             console.log("complete");
                             this.hasGotData = true;
                             onLoadCompleted && onLoadCompleted();
                         }
                     )
+                    .catch(err => {
+                        ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
+                    })
             );
         }
     }
@@ -133,8 +132,8 @@ export default class WxReadMpList extends Component {
     componentWillUnmount() {
         // ToastAndroid.show('componentWillUnmount', ToastAndroid.SHORT);
         this.init();
-        this.subscriptions.forEach(subscription => {
-            subscription.unsubscribe();
+        this.requests.forEach(request => {
+            // subscription.unsubscribe();
         })
     }
 

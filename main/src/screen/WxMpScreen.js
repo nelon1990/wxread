@@ -21,13 +21,13 @@ class WxMpScreen extends Component {
     }
 
     componentDidMount() {
-        WxReadApi2.getMpTypeList()
-            .subscribe(
-                result => {
-                    console.log('getMpTypeList >>>>>>>>>>>>>>>>>>', result);
+        WxReadApi2.getMpTypeList2()
+            .then(
+                json => {
+                    console.log('getMpTypeList >>>>>>>>>>>>>>>>>>', json);
                     const tabs = [];
 
-                    result.showapi_res_body.allList.forEach(({id, name}) => {
+                    json.showapi_res_body.allList.forEach(({id, name}) => {
                         tabs.push({
                             channel: name,
                             channelid: id,
@@ -44,13 +44,10 @@ class WxMpScreen extends Component {
                         hasGotTabs: true
                     });
                 },
-                err => {
-                    ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
-                },
-                () => {
-                    console.log("complete")
-                }
-            );
+            )
+            .catch(err => {
+                ToastAndroid.show(err.toString(), ToastAndroid.SHORT)
+            });
     }
 
 
